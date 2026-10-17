@@ -1,0 +1,49 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "doc-tools-demo"
+version = "0.1.0"
+description = "Web demo for doc-extract, doc-chunker and office-translate: extract, chunk and translate documents with any OpenAI-compatible model"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Hamid Mergan" }]
+keywords = ["gradio", "ocr", "rag", "chunking", "translation", "glossary", "llm", "ollama", "openai"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: End Users/Desktop",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Text Processing",
+]
+dependencies = [
+    "gradio>=6",
+    "doc-extract-llm>=0.1",
+    "document-chunker>=0.1",
+    "office-translate>=0.2",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=7", "python-docx>=1.0"]
+
+[project.urls]
+Homepage = "https://github.com/hamidmergan/doc-tools-demo"
+Source = "https://github.com/hamidmergan/doc-tools-demo"
+Issues = "https://github.com/hamidmergan/doc-tools-demo/issues"
+
+[project.scripts]
+doc-tools-demo = "doc_tools_demo.app:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
