@@ -205,6 +205,26 @@ def test_handler_translate_text(server):
     assert notes == ""
 
 
+def test_server_settings_are_not_sent_to_browser():
+    demo = app.build(core.Settings("http://internal.example/v1", "text", "vision", "secret-key"))
+    page = json.dumps(demo.get_config_file(), default=str)
+    assert "internal.example" not in page
+    assert "secret-key" not in page
+
+
+def test_handler_uses_server_settings(server):
+    app.build(core.Settings(server.base_url, "text-model"))
+    _, text, _ = app.run_translate(None, "hi", "German", "", "", None, None, False, "", "", "", "")
+    assert text == "HI"
+    assert server.models() == ["text-model"]
+
+
+def test_page_values_win_over_server_settings():
+    app.build(core.Settings("http://server/v1", "a", None, "k"))
+    s = app._settings("http://page/v1", "", " ", "")
+    assert (s.base_url, s.model, s.vision_model, s.api_key) == ("http://page/v1", "a", None, "k")
+
+
 def test_handler_pipeline_ignores_glossary_when_unticked(server, make_image):
     md, table, files, info = app.run_pipeline(
         str(make_image()), "German", 1000, 150, False,

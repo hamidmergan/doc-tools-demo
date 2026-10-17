@@ -20,8 +20,12 @@ Try [doc-extract](https://github.com/hamidmergan/doc-extract), [doc-chunker](htt
 Set the model server below. Chunking runs locally and needs no model."""
 
 
+# Settings from flags or environment. They stay on the server and are never sent to the browser.
+_server_settings = core.Settings()
+
+
 def _settings(base_url, model, vision_model, api_key) -> core.Settings:
-    return core.Settings(base_url, model, vision_model, api_key)
+    return core.Settings(base_url, model, vision_model, api_key).over(_server_settings)
 
 
 def _shows_errors(func):
@@ -130,20 +134,26 @@ def run_pipeline(
 
 
 def build(defaults: Optional[core.Settings] = None) -> gr.Blocks:
-    defaults = defaults or core.Settings.from_env()
+    global _server_settings
+    _server_settings = (defaults or core.Settings.from_env()).clean()
+    server = _server_settings
+
+    def hint(value, example):
+        return "Set on the server. Type here to override." if value else example
 
     with gr.Blocks(title="doc-tools-demo") as demo:
         gr.Markdown(INTRO)
 
-        with gr.Accordion("Model settings", open=not (defaults.base_url and defaults.model)):
+        with gr.Accordion("Model settings", open=not (server.base_url and server.model)):
             with gr.Row():
-                base_url = gr.Textbox(defaults.base_url or "", label="Base URL", placeholder="http://localhost:11434/v1")
-                api_key = gr.Textbox(defaults.api_key or "", label="API key (optional)", type="password")
+                base_url = gr.Textbox("", label="Base URL", placeholder=hint(server.base_url, "http://localhost:11434/v1"))
+                api_key = gr.Textbox("", label="API key (optional)", type="password", placeholder=hint(server.api_key, ""))
             with gr.Row():
-                model = gr.Textbox(defaults.model or "", label="Model", info="Used for translation.")
+                model = gr.Textbox("", label="Model", info="Used for translation.", placeholder=hint(server.model, ""))
                 vision_model = gr.Textbox(
-                    defaults.vision_model or "", label="Vision model (optional)",
+                    "", label="Vision model (optional)",
                     info="Used for extraction. Empty means the model above, which then must read images.",
+                    placeholder=hint(server.vision_model, ""),
                 )
         model_inputs = [base_url, model, vision_model, api_key]
 

@@ -68,7 +68,7 @@ Order: flag, then environment variable. There are no defaults for the model serv
 | `--host` | | address to listen on, default `127.0.0.1` |
 | `--port` | | port, default `7860` |
 
-Values typed into the page only apply to that browser tab. Empty fields fall back to the settings of each tool, for example `DOC_EXTRACT_BASE_URL` or `OFFICE_TRANSLATE_MODEL`.
+Values from flags or environment variables stay on the server. They are not shown on the page and not sent to the browser, so the fields stay empty. Values typed into the page win and only apply to that browser tab. If neither is set, the settings of each tool are used, for example `DOC_EXTRACT_BASE_URL` or `OFFICE_TRANSLATE_MODEL`.
 
 ## Limitations
 

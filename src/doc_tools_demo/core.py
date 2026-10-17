@@ -41,6 +41,16 @@ class Settings:
     def clean(self) -> "Settings":
         return Settings(*(_blank_to_none(v) for v in (self.base_url, self.model, self.vision_model, self.api_key)))
 
+    def over(self, fallback: "Settings") -> "Settings":
+        """Values of this object, with empty ones taken from ``fallback``."""
+        mine, other = self.clean(), fallback.clean()
+        return Settings(
+            mine.base_url or other.base_url,
+            mine.model or other.model,
+            mine.vision_model or other.vision_model,
+            mine.api_key or other.api_key,
+        )
+
     def text_args(self) -> dict:
         s = self.clean()
         return {"base_url": s.base_url, "model": s.model, "api_key": s.api_key}

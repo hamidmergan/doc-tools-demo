@@ -88,6 +88,9 @@ def clean_env(monkeypatch):
     for name in list(os.environ):
         if name.startswith(prefixes) or name == "OPENAI_API_KEY":
             monkeypatch.delenv(name)
+    from doc_tools_demo import app, core
+
+    monkeypatch.setattr(app, "_server_settings", core.Settings())
 
 
 @pytest.fixture
