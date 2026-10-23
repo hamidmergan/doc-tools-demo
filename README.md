@@ -19,11 +19,13 @@ The Chunk tab needs no model. If you run the model yourself, your documents neve
 
 ## Installation
 
+doc-tools-demo is installed from GitHub:
+
 ```bash
-pip install doc-tools-demo
+pip install git+https://github.com/hamidmergan/doc-tools-demo.git
 ```
 
-Alternatively, you can install it from the source:
+Alternatively, you can install it from a local copy:
 
 ```bash
 git clone https://github.com/hamidmergan/doc-tools-demo.git
